@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "657326681746",
+    "project_id": "pokedex-94360",
+    "storage_bucket": "pokedex-94360.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:657326681746:android:4635829924492e4c84804b",
+        "android_client_info": {
+          "package_name": "com.sokah.pokedex"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "657326681746-lqfspfrmgmqiao3giflhru900hffa3o9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBs-UcXt_jJq11sZVbHT_8U2LJgIJrzTak"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "657326681746-lqfspfrmgmqiao3giflhru900hffa3o9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

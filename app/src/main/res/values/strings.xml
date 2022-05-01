@@ -1,3 +1,24 @@
 <resources>
-    <string name="app_name">Pokedex</string>
+    <string name="app_name">Pokédex</string>
+    <!-- home strings  -->
+    <string name="home_welcome">Busca un pokémon por su nombre o por su número dentro de la pokédex.</string>
+    <string name="home_searchInput__hint">Elige a tu pokémon.</string>
+    <string name="home_searchBtn">Buscar el pokémon.</string>
+    <string name="home_subtitle__myPokemons">Mis pokémons.</string>
+
+    <!-- login strings  -->
+    <string name="login_welcome">Bienvenido de vuelta entrenador, ingresa para observar tus pokémons.</string>
+    <string name="login_input_hint">Nombre de entrenador.</string>
+
+    <!-- pokeView strings  -->
+    <string name="pokeView_btn_catch">Atrapalo ya!!.</string>
+    <string name="pokeView_btn_letFree">Dile adios a tu pokémon :c.</string>
+    <string name="pokeView_stat_hp">HP:</string>
+    <string name="pokeView_stat_atk">Ataque:</string>
+    <string name="pokeView_stat_def">Defensa:</string>
+    <string name="pokeView_stat_atkEsp">Atq. Especial:</string>
+    <string name="pokeView_stat_defEsp">Def. Especial:</string>
+    <string name="pokeView_stat_speed">Velocidad:</string>
+
+
 </resources>

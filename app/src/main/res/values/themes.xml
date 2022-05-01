@@ -32,7 +32,7 @@
 
     <style name="input_style" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:fontFamily">@font/poppins_extralight</item>
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/poke_black</item>
     </style>
 

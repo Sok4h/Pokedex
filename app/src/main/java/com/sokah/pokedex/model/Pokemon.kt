@@ -1,19 +1,38 @@
 package com.sokah.pokedex.model
 
 import com.google.gson.annotations.SerializedName
-import com.squareup.moshi.Json
 
 data class Pokemon(
 
-    @Json(name = "Name")
+    @SerializedName("Name")
     val name: String,
     val id: Int,
     val height: Int,
     val weight: Int,
     @SerializedName("stats")
     val stats: List<Stat>,
+    val sprites:Sprites
 
     )
+
+data class Sprites (
+
+    val other :Other
+        )
+
+data class Other(
+
+
+
+    @SerializedName("official-artwork")
+
+    val artwork:Artwork
+)
+
+data class Artwork(
+
+    val front_default:String
+)
 
 data class Stat(
     val base_stat: Int,

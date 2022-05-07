@@ -45,9 +45,9 @@ class MainActivity : AppCompatActivity() {
         if (binding.inputPokemon.editText?.text!!.isNotEmpty()) {
             coroutineJob = CoroutineScope(Dispatchers.IO).launch {
 
-                 pokemon=  api.findPokemon(binding.inputPokemon.editText?.text.toString())
+                pokemon= api.findPokemon(binding.inputPokemon.editText?.text.toString())
 
-                val intent = Intent(applicationContext,PokemonActivity::class.java)
+             val intent = Intent(applicationContext,PokemonActivity::class.java)
                 var gson = Gson()
 
                 intent.putExtra("pokemon",gson.toJson(pokemon))

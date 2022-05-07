@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import com.bumptech.glide.Glide
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -38,6 +39,8 @@ class PokemonActivity : AppCompatActivity() {
 
         var gson = Gson()
         pokemon= gson.fromJson(intent.extras?.getString("pokemon"),Pokemon::class.java)
+        Glide.with(this).load(pokemon.sprites.other.artwork.front_default).into(binding.imgPokemon)
+        binding.tvPokemonName.text = pokemon.name
         setupPokemon()
 
 

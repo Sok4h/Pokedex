@@ -1,6 +1,6 @@
 package com.sokah.pokedex.network
 
-import com.sokah.pokedex.Pokemon
+import com.sokah.pokedex.model.Pokemon
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

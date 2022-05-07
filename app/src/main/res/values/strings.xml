@@ -11,7 +11,7 @@
     <string name="login_input_hint">Nombre de entrenador.</string>
 
     <!-- pokeView strings  -->
-    <string name="pokeView_btn_catch">Atrapalo ya!!.</string>
+    <string name="pokeView_btn_catch">Atrapalo ya!!</string>
     <string name="pokeView_btn_letFree">Dile adios a tu pokémon :c.</string>
     <string name="pokeView_stat_hp">HP:</string>
     <string name="pokeView_stat_atk">Ataque:</string>

@@ -1,8 +1,10 @@
 package com.sokah.pokedex
 
+import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.core.content.res.ResourcesCompat
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -27,7 +29,7 @@ class PokemonActivity : AppCompatActivity() {
 
   /*  val pokemon = Pokemon(
         "Pikachu", 32, 1, 2, listOf(
-            Stat(30,  StatX("fuerza")), Stat(60,  StatX("hp")), Stat(10, StatX("velocidad"))
+            Stat(30,  StatX("fuerza")),Stat(30,  StatX("fuerza")),Stat(30,  StatX("fuerza")),Stat(30,  StatX("fuerza")), Stat(60,  StatX("hp")), Stat(10, StatX("velocidad"))
         )
     )*/
 
@@ -50,31 +52,31 @@ class PokemonActivity : AppCompatActivity() {
         val label: ArrayList<String> = ArrayList()
 
         for ((index, stat) in pokemon.stats.withIndex()) {
-
             entries.add(BarEntry(index.toFloat(), stat.baseStat.toFloat()))
             label.add(stat.stat.name)
         }
 
         initBar()
+
         val barDataSet = BarDataSet(entries, "label")
         barDataSet.setColors(*ColorTemplate.COLORFUL_COLORS)
 
         val data = BarData(barDataSet)
 
         binding.barChart.data = data
-        binding.barChart.animateY(1000)
         binding.barChart.invalidate()
 
     }
 
     fun initBar(){
 
-
-//        hide grid lines
-        binding.barChart.axisLeft.setDrawGridLines(false)
         val xAxis: XAxis = binding.barChart.xAxis
+
+        //hide grid lines
+        binding.barChart.axisLeft.setDrawGridLines(false)
         xAxis.setDrawGridLines(false)
         xAxis.setDrawAxisLine(false)
+
 
         //remove right y-axis
         binding.barChart.axisRight.isEnabled = false
@@ -89,14 +91,20 @@ class PokemonActivity : AppCompatActivity() {
 
 
         //add animation
-        binding.barChart.animateY(3000)
+        binding.barChart.animateY(1000)
 
         // to draw label on xAxis
-        xAxis.position = XAxis.XAxisPosition.BOTTOM_INSIDE
-        xAxis.valueFormatter = MyAxisFormatter()
-        xAxis.setDrawLabels(true)
-        xAxis.granularity = 1f
-        xAxis.labelRotationAngle = +90f
+        xAxis.apply {
+            typeface = ResourcesCompat.getFont(applicationContext, R.font.poppins);
+            textSize = 14f
+
+            position = XAxis.XAxisPosition.BOTTOM
+            valueFormatter = MyAxisFormatter()
+            setDrawLabels(true)
+            granularity = 1f
+
+        }
+
 
     }
 
@@ -106,7 +114,7 @@ class PokemonActivity : AppCompatActivity() {
             val index = value.toInt()
             Log.d("TAG", "getAxisLabel: index $index")
             return if (index < pokemon.stats.size) {
-                pokemon.stats[index].stat.name
+                pokemon.stats[index].stat.name+":   "+pokemon.stats[index].baseStat
             } else {
                 ""
             }

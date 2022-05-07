@@ -16,7 +16,7 @@ data class Pokemon(
     )
 
 data class Stat(
-    val baseStat: Int,
+    val base_stat: Int,
     val stat: StatX
 )
 

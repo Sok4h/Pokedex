@@ -1,9 +1,9 @@
 package com.sokah.pokedex
 
-import android.graphics.Typeface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
@@ -13,11 +13,8 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.gson.Gson
-import com.sokah.pokedex.databinding.ActivityMainBinding
 import com.sokah.pokedex.databinding.ActivityPokemonBinding
 import com.sokah.pokedex.model.Pokemon
-import com.sokah.pokedex.model.Stat
-import com.sokah.pokedex.model.StatX
 import java.util.ArrayList
 
 class PokemonActivity : AppCompatActivity() {
@@ -52,25 +49,35 @@ class PokemonActivity : AppCompatActivity() {
         val label: ArrayList<String> = ArrayList()
 
         for ((index, stat) in pokemon.stats.withIndex()) {
-            entries.add(BarEntry(index.toFloat(), stat.baseStat.toFloat()))
+            entries.add(BarEntry(index.toFloat(), stat.base_stat.toFloat()))
             label.add(stat.stat.name)
         }
 
         initBar()
 
-        val barDataSet = BarDataSet(entries, "label")
-        barDataSet.setColors(*ColorTemplate.COLORFUL_COLORS)
+        val barDataSet = BarDataSet(entries, "label").apply {
+            setColors(*ColorTemplate.COLORFUL_COLORS)
+            valueTextSize = 12f
+            valueTextColor = ContextCompat.getColor(applicationContext,R.color.white)
+            valueTypeface =ResourcesCompat.getFont(applicationContext, R.font.poppins)
+        }
 
-        val data = BarData(barDataSet)
+        val barData = BarData(barDataSet).apply {
+            barWidth = 0.7f
+        }
 
-        binding.barChart.data = data
-        binding.barChart.invalidate()
+        binding.barChart.apply {
+            data = barData
+            setDrawValueAboveBar(false)
+            invalidate()
+        }
 
     }
 
-    fun initBar(){
+    private fun initBar(){
 
         val xAxis: XAxis = binding.barChart.xAxis
+        binding.barChart.axisLeft.axisMinimum = 0f
 
         //hide grid lines
         binding.barChart.axisLeft.setDrawGridLines(false)
@@ -95,16 +102,14 @@ class PokemonActivity : AppCompatActivity() {
 
         // to draw label on xAxis
         xAxis.apply {
-            typeface = ResourcesCompat.getFont(applicationContext, R.font.poppins);
-            textSize = 14f
+            typeface = ResourcesCompat.getFont(applicationContext, R.font.poppins)
+            textSize = 12f
 
             position = XAxis.XAxisPosition.BOTTOM
             valueFormatter = MyAxisFormatter()
             setDrawLabels(true)
             granularity = 1f
-
         }
-
 
     }
 
@@ -114,7 +119,7 @@ class PokemonActivity : AppCompatActivity() {
             val index = value.toInt()
             Log.d("TAG", "getAxisLabel: index $index")
             return if (index < pokemon.stats.size) {
-                pokemon.stats[index].stat.name+":   "+pokemon.stats[index].baseStat
+                pokemon.stats[index].stat.name+":"
             } else {
                 ""
             }

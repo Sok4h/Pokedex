@@ -10,6 +10,7 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
+import com.google.gson.Gson
 import com.sokah.pokedex.databinding.ActivityMainBinding
 import com.sokah.pokedex.databinding.ActivityPokemonBinding
 import com.sokah.pokedex.model.Pokemon
@@ -24,21 +25,26 @@ class PokemonActivity : AppCompatActivity() {
         ActivityPokemonBinding.inflate(layoutInflater)
     }
 
-    val pokemon = Pokemon(
+  /*  val pokemon = Pokemon(
         "Pikachu", 32, 1, 2, listOf(
             Stat(30,  StatX("fuerza")), Stat(60,  StatX("hp")), Stat(10, StatX("velocidad"))
         )
-    )
+    )*/
+
+    lateinit var pokemon:Pokemon
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        var gson = Gson()
+        pokemon= gson.fromJson(intent.extras?.getString("pokemon"),Pokemon::class.java)
         setupPokemon()
+
+
     }
 
     private fun setupPokemon() {
-
 
         val entries: ArrayList<BarEntry> = ArrayList()
         val label: ArrayList<String> = ArrayList()
@@ -58,8 +64,6 @@ class PokemonActivity : AppCompatActivity() {
         binding.barChart.data = data
         binding.barChart.animateY(1000)
         binding.barChart.invalidate()
-
-
 
     }
 

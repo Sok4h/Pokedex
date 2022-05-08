@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName
 
 data class Pokemon(
 
-    @SerializedName("Name")
     val name: String,
     val id: Int,
     val height: Int,
@@ -21,16 +20,11 @@ data class Sprites (
         )
 
 data class Other(
-
-
-
     @SerializedName("official-artwork")
-
     val artwork:Artwork
 )
 
 data class Artwork(
-
     val front_default:String
 )
 

@@ -1,8 +1,9 @@
 package com.sokah.pokedex
 
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.bumptech.glide.Glide
@@ -16,7 +17,7 @@ import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.gson.Gson
 import com.sokah.pokedex.databinding.ActivityPokemonBinding
 import com.sokah.pokedex.model.Pokemon
-import java.util.ArrayList
+
 
 class PokemonActivity : AppCompatActivity() {
 
@@ -40,7 +41,7 @@ class PokemonActivity : AppCompatActivity() {
         var gson = Gson()
         pokemon= gson.fromJson(intent.extras?.getString("pokemon"),Pokemon::class.java)
         Glide.with(this).load(pokemon.sprites.other.artwork.front_default).into(binding.imgPokemon)
-        binding.tvPokemonName.text = pokemon.name
+        binding.tvPokeName.text = pokemon.name
         setupPokemon()
 
 

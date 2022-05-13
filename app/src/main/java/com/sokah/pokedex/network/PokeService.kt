@@ -10,13 +10,19 @@ class PokeService {
 
     val retrofit = RetrofitHelper.getRetrofit()
 
-    suspend fun findPokemon(pokemon: String):Pokemon {
+    suspend fun findPokemon(pokemon: String):Pokemon? {
         Log.e("TAG", "findPokemon: ",)
 
             return withContext(Dispatchers.IO) {
                 val response = retrofit.create(PokeApi::class.java).searchPokemon(pokemon)
-                Log.e("TAG", response.body()!!.sprites.other.artwork.toString() )
-                response.body()!!
+
+                if(response.isSuccessful&&response.body()!=null){
+                        response.body()!!
+
+                }else{
+                    null
+                }
+
 
         }
 

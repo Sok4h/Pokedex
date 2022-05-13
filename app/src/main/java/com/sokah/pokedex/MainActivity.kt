@@ -47,11 +47,25 @@ class MainActivity : AppCompatActivity() {
 
                 pokemon= api.findPokemon(binding.inputPokemon.editText?.text.toString())
 
-             val intent = Intent(applicationContext,PokemonActivity::class.java)
-                var gson = Gson()
+                if(pokemon==null){
 
-                intent.putExtra("pokemon",gson.toJson(pokemon))
-                startActivity(intent)
+                withContext(Dispatchers.Main){
+                    Toast.makeText(applicationContext,"El pokemon buscado no existe",Toast.LENGTH_SHORT).show()
+
+                }
+
+
+                }else{
+
+                    val intent = Intent(applicationContext,PokemonActivity::class.java)
+                    val gson = Gson()
+
+                    intent.putExtra("pokemon",gson.toJson(pokemon))
+                    startActivity(intent)
+                }
+
+
+
             }
         } else{
 

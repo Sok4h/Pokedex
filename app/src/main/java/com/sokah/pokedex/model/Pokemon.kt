@@ -15,7 +15,8 @@ data class Pokemon(
     @SerializedName("stats")
     val stats: List<Stat> = emptyList(),
     val sprites: Sprites = Sprites(Other(Artwork(""))),
-    var date: Date? = null
+    var date: Date? = null,
+    var uid: String? = null
 )
 
 data class Sprites(

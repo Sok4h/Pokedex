@@ -52,6 +52,11 @@ class MainActivity : AppCompatActivity() {
             //layoutManager = LinearLayoutManager(applicationContext)
         }
 
+        listenPokemons()
+
+    }
+
+    private fun listenPokemons(){
         myPokemonsRefs.addSnapshotListener { snapshot, e ->
             if (e != null) {
                 Toast.makeText(this, "No se pudo cargar la información de tus pokemons", Toast.LENGTH_LONG).show()
@@ -62,7 +67,10 @@ class MainActivity : AppCompatActivity() {
                 pokemonAdapter.clear()
                 snapshot.forEach {
                     Log.e(">>>", "Current data: ${it.data}")
-                    pokemonAdapter.addPokemon(it.toObject(Pokemon::class.java))
+                    val newPokemon = it.toObject(Pokemon::class.java)
+                    newPokemon.uid = it.id
+
+                    pokemonAdapter.addPokemon(newPokemon)
                 }
 
             } else {

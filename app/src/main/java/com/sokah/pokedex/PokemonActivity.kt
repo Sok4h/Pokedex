@@ -1,5 +1,6 @@
 package com.sokah.pokedex
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -30,15 +31,8 @@ import kotlin.collections.ArrayList
 class PokemonActivity : AppCompatActivity() {
 
     private val binding: ActivityPokemonBinding by lazy {
-
         ActivityPokemonBinding.inflate(layoutInflater)
     }
-
-    private var myPokemonsRefs = Firebase.firestore
-        .collection("users")
-        .document("test")
-        .collection("pokemons")
-
 
     lateinit var pokemon: Pokemon
 
@@ -46,7 +40,9 @@ class PokemonActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        var gson = Gson()
+        val isMy = intent.extras?.getBoolean("isMy")
+
+        val gson = Gson()
         pokemon = gson.fromJson(intent.extras?.getString("pokemon"), Pokemon::class.java)
         pokemon.date = Calendar.getInstance().time
         Glide.with(applicationContext)
@@ -55,15 +51,49 @@ class PokemonActivity : AppCompatActivity() {
         binding.tvPokeName.text = pokemon.name
         setupPokemon()
 
-        binding.button.setOnClickListener {
-            lifecycleScope.launch(Dispatchers.IO) {
-                myPokemonsRefs.add(pokemon).addOnCompleteListener {
+        if(isMy!!){
+            binding.button.text = "Liberar pokémon"
+        }
 
+        binding.button.setOnClickListener {
+            if(isMy!!){
+                releasePokemon()
+            }else{
+                uploadPokemon()
+            }
+        }
+    }
+
+    private fun uploadPokemon() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            Firebase.firestore
+                .collection("users")
+                .document("test")
+                .collection("pokemons")
+                .add(pokemon)
+                .addOnCompleteListener {
+                    Toast.makeText(applicationContext, "Se atrapo el pokémon", Toast.LENGTH_SHORT)
+                        .show()
+                }
+        }
+    }
+    private fun releasePokemon(){
+        lifecycleScope.launch(Dispatchers.IO) {
+            val uid = intent.extras?.getString("uid")
+
+            Firebase.firestore
+                .collection("users")
+                .document("test")
+                .collection("pokemons")
+                .document(uid!!)
+                .delete()
+                .addOnCompleteListener {
                     Toast.makeText(applicationContext, "Se atrapo el pokémon", Toast.LENGTH_SHORT)
                         .show()
 
+                    val intent = Intent(applicationContext,MainActivity::class.java)
+                    applicationContext.startActivity(intent)
                 }
-            }
         }
     }
 

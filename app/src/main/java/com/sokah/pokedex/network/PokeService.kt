@@ -17,7 +17,7 @@ class PokeService {
                 val response = retrofit.create(PokeApi::class.java).searchPokemon(pokemon)
 
                 if(response.isSuccessful&&response.body()!=null){
-                        response.body()!!
+                        response.body()
 
                 }else{
                     null

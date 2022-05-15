@@ -3,10 +3,13 @@ package com.sokah.pokedex
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import com.sokah.pokedex.databinding.ActivityMainBinding
 import com.sokah.pokedex.model.Pokemon
@@ -21,6 +24,11 @@ class MainActivity : AppCompatActivity() {
 
     private var pokemon: Pokemon? = null
     private var pokemonAdapter = PokemonAdapter()
+
+    private var myPokemonsRefs = Firebase.firestore
+        .collection("users")
+        .document("test")
+        .collection("pokemons")
 
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -37,10 +45,29 @@ class MainActivity : AppCompatActivity() {
         binding.btnSearchHome.setOnClickListener {
             searchPokemon()
         }
+
         binding.rvMyPokemonsHome.apply {
             layoutManager = GridLayoutManager(applicationContext, 2)
             adapter = pokemonAdapter
             //layoutManager = LinearLayoutManager(applicationContext)
+        }
+
+        myPokemonsRefs.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Toast.makeText(this, "No se pudo cargar la información de tus pokemons", Toast.LENGTH_LONG).show()
+                return@addSnapshotListener
+            }
+
+            if (snapshot !== null && !snapshot.isEmpty) {
+                pokemonAdapter.clear()
+                snapshot.forEach {
+                    Log.e(">>>", "Current data: ${it.data}")
+                    pokemonAdapter.addPokemon(it.toObject(Pokemon::class.java))
+                }
+
+            } else {
+                Toast.makeText(this, "Aun no tienes pokemons, atrapa tu primer pokemon!", Toast.LENGTH_LONG).show()
+            }
         }
     }
 

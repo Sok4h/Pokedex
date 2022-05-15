@@ -5,18 +5,22 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sokah.pokedex.R
 import com.sokah.pokedex.model.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class PokemonAdapter : RecyclerView.Adapter<PokemonViewHolder>() {
     private val pokemons = ArrayList<Pokemon>()
 
+    /*
     init {
         val sprites = Sprites(Other(Artwork("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/25.png")))
-        val testPokemon = Pokemon("pikachu",23,1,34, stats = ArrayList(), sprites)
+        val testPokemon = Pokemon("pikachu",23,1,34, stats = ArrayList(), sprites, Calendar.getInstance());
         pokemons.add(testPokemon)
         pokemons.add(testPokemon)
         pokemons.add(testPokemon)
 
     }
+     */
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonViewHolder {
         val inflater = LayoutInflater.from(parent.context)

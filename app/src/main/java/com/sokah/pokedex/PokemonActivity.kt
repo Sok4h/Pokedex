@@ -1,11 +1,12 @@
 package com.sokah.pokedex
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
@@ -14,37 +15,56 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import com.sokah.pokedex.databinding.ActivityPokemonBinding
 import com.sokah.pokedex.model.Pokemon
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class PokemonActivity : AppCompatActivity() {
 
-    val binding: ActivityPokemonBinding by lazy {
+    private val binding: ActivityPokemonBinding by lazy {
 
         ActivityPokemonBinding.inflate(layoutInflater)
     }
 
-  /*  val pokemon = Pokemon(
-        "Pikachu", 32, 1, 2, listOf(
-            Stat(30,  StatX("fuerza")),Stat(30,  StatX("fuerza")),Stat(30,  StatX("fuerza")),Stat(30,  StatX("fuerza")), Stat(60,  StatX("hp")), Stat(10, StatX("velocidad"))
-        )
-    )*/
+    private var myPokemonsRefs = Firebase.firestore
+        .collection("users")
+        .document("test")
+        .collection("pokemons")
 
-    lateinit var pokemon:Pokemon
+
+    lateinit var pokemon: Pokemon
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
         var gson = Gson()
-        pokemon= gson.fromJson(intent.extras?.getString("pokemon"),Pokemon::class.java)
-        Glide.with(this).load(pokemon.sprites.other.artwork.front_default).into(binding.imgPokemon)
+        pokemon = gson.fromJson(intent.extras?.getString("pokemon"), Pokemon::class.java)
+        pokemon.date = Calendar.getInstance().time
+        Glide.with(applicationContext)
+            .load(pokemon.sprites.other.artwork.front_default)
+            .into(binding.imgPokemon)
         binding.tvPokeName.text = pokemon.name
         setupPokemon()
 
+        binding.button.setOnClickListener {
+            lifecycleScope.launch(Dispatchers.IO) {
+                myPokemonsRefs.add(pokemon).addOnCompleteListener {
 
+                    Toast.makeText(applicationContext, "Se atrapo el pokémon", Toast.LENGTH_SHORT)
+                        .show()
+
+                }
+            }
+        }
     }
 
     private fun setupPokemon() {
@@ -62,8 +82,8 @@ class PokemonActivity : AppCompatActivity() {
         val barDataSet = BarDataSet(entries, "label").apply {
             setColors(*ColorTemplate.COLORFUL_COLORS)
             valueTextSize = 12f
-            valueTextColor = ContextCompat.getColor(applicationContext,R.color.white)
-            valueTypeface =ResourcesCompat.getFont(applicationContext, R.font.poppins)
+            valueTextColor = ContextCompat.getColor(applicationContext, R.color.white)
+            valueTypeface = ResourcesCompat.getFont(applicationContext, R.font.poppins)
         }
 
         val barData = BarData(barDataSet).apply {
@@ -78,7 +98,7 @@ class PokemonActivity : AppCompatActivity() {
 
     }
 
-    private fun initBar(){
+    private fun initBar() {
 
         val xAxis: XAxis = binding.barChart.xAxis
         binding.barChart.axisLeft.axisMinimum = 0f
@@ -123,7 +143,7 @@ class PokemonActivity : AppCompatActivity() {
             val index = value.toInt()
             Log.d("TAG", "getAxisLabel: index $index")
             return if (index < pokemon.stats.size) {
-                pokemon.stats[index].stat.name+":"
+                pokemon.stats[index].stat.name + ":"
             } else {
                 ""
             }

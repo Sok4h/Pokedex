@@ -23,6 +23,7 @@ import com.sokah.pokedex.databinding.ActivityPokemonBinding
 import com.sokah.pokedex.model.Pokemon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.ArrayList
@@ -51,14 +52,14 @@ class PokemonActivity : AppCompatActivity() {
         binding.tvPokeName.text = pokemon.name
         setupPokemon()
 
-        if(isMy!!){
+        if (isMy!!) {
             binding.button.text = "Liberar pokémon"
         }
 
         binding.button.setOnClickListener {
-            if(isMy!!){
+            if (isMy!!) {
                 releasePokemon()
-            }else{
+            } else {
                 uploadPokemon()
             }
         }
@@ -71,13 +72,21 @@ class PokemonActivity : AppCompatActivity() {
                 .document("test")
                 .collection("pokemons")
                 .add(pokemon)
-                .addOnCompleteListener {
-                    Toast.makeText(applicationContext, "Se atrapo el pokémon", Toast.LENGTH_SHORT)
-                        .show()
-                }
+                .await()
+
+            withContext(Dispatchers.Main) {
+                Toast.makeText(applicationContext, "Se atrapo el pokémon", Toast.LENGTH_SHORT)
+                    .show()
+
+                val intent = Intent(applicationContext, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                applicationContext.startActivity(intent)
+            }
+
         }
     }
-    private fun releasePokemon(){
+
+    private fun releasePokemon() {
         lifecycleScope.launch(Dispatchers.IO) {
             val uid = intent.extras?.getString("uid")
 
@@ -87,13 +96,16 @@ class PokemonActivity : AppCompatActivity() {
                 .collection("pokemons")
                 .document(uid!!)
                 .delete()
-                .addOnCompleteListener {
-                    Toast.makeText(applicationContext, "Se atrapo el pokémon", Toast.LENGTH_SHORT)
-                        .show()
+                .await()
 
-                    val intent = Intent(applicationContext,MainActivity::class.java)
-                    applicationContext.startActivity(intent)
-                }
+            withContext(Dispatchers.Main) {
+                Toast.makeText(applicationContext, "Se atrapo el pokémon", Toast.LENGTH_SHORT)
+                    .show()
+
+                val intent = Intent(applicationContext, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                applicationContext.startActivity(intent)
+            }
         }
     }
 

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,11 +25,6 @@ class MainActivity : AppCompatActivity() {
 
     private var pokemon: Pokemon? = null
     private var pokemonAdapter = PokemonAdapter()
-
-    private var myPokemonsRefs = Firebase.firestore
-        .collection("users")
-        .document("test")
-        .collection("pokemons")
 
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -56,27 +52,41 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun listenPokemons(){
-        myPokemonsRefs.addSnapshotListener { snapshot, e ->
-            if (e != null) {
-                Toast.makeText(this, "No se pudo cargar la información de tus pokemons", Toast.LENGTH_LONG).show()
-                return@addSnapshotListener
-            }
+    private fun listenPokemons() {
 
-            if (snapshot !== null && !snapshot.isEmpty) {
-                pokemonAdapter.clear()
-                snapshot.forEach {
-                    Log.e(">>>", "Current data: ${it.data}")
-                    val newPokemon = it.toObject(Pokemon::class.java)
-                    newPokemon.uid = it.id
-
-                    pokemonAdapter.addPokemon(newPokemon)
+        Firebase.firestore
+            .collection("users")
+            .document("test")
+            .collection("pokemons")
+            .orderBy("date")
+            .addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    Toast.makeText(
+                        this,
+                        "No se pudo cargar la información de tus pokemons",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    return@addSnapshotListener
                 }
 
-            } else {
-                Toast.makeText(this, "Aun no tienes pokemons, atrapa tu primer pokemon!", Toast.LENGTH_LONG).show()
+                if (snapshot !== null && !snapshot.isEmpty) {
+                    pokemonAdapter.clear()
+                    snapshot.forEach {
+                        val newPokemon = it.toObject(Pokemon::class.java)
+                        newPokemon.uid = it.id
+
+                        pokemonAdapter.addPokemon(newPokemon)
+                    }
+
+                } else {
+                    Toast.makeText(
+                        this,
+                        "Aun no tienes pokemons, atrapa tu primer pokemon!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
-        }
+
     }
 
     private fun searchPokemon() {

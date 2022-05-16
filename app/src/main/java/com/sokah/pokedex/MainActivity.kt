@@ -1,14 +1,13 @@
 package com.sokah.pokedex
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
@@ -18,19 +17,20 @@ import com.sokah.pokedex.network.PokeService
 import com.sokah.pokedex.view.PokemonAdapter
 import kotlinx.coroutines.*
 
+
 class MainActivity : AppCompatActivity() {
 
     private var coroutineJob: Job? = null
     private val api = PokeService()
 
     private var pokemon: Pokemon? = null
-    private lateinit var pokemonAdapter : PokemonAdapter
+    private lateinit var pokemonAdapter: PokemonAdapter
 
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
-    private lateinit var username:String
+    private lateinit var username: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,18 +55,30 @@ class MainActivity : AppCompatActivity() {
 
         listenPokemons()
 
-        binding.inputQuery.setEndIconOnClickListener{
+        binding.inputQuery.editText?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                if (s.toString().isEmpty()) {
+                    listenPokemons()
+                }
+            }
+
+            override fun afterTextChanged(s: Editable) {}
+        })
+
+        binding.inputQuery.setEndIconOnClickListener {
             val filterValue = binding.inputQuery.editText?.text.toString()
-            if(filterValue.isEmpty()){
+            if (filterValue.isEmpty()) {
                 listenPokemons()
-            }else{
+            } else {
                 filterPokemons(filterValue)
             }
         }
 
     }
 
-    private fun filterPokemons(filterValue: String){
+    private fun filterPokemons(filterValue: String) {
         Firebase.firestore
             .collection("users")
             .document(username)
@@ -96,7 +108,7 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(
                         this,
-                        "Aun no tienes pokemons, atrapa tu primer pokemon!",
+                        "No se encontró el pokemon!",
                         Toast.LENGTH_LONG
                     ).show()
                 }

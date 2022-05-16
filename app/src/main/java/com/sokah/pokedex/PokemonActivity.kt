@@ -2,8 +2,10 @@ package com.sokah.pokedex
 
 import android.content.Intent
 import android.graphics.drawable.Drawable
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -47,11 +49,28 @@ class PokemonActivity : AppCompatActivity() {
         pokemon = gson.fromJson(intent.extras?.getString("pokemon"), Pokemon::class.java)
         pokemon.date = Calendar.getInstance().time
 
-        /*Log.e("TAG", pokemon.types.toString() )
 
-        val drawableId = resources.getIdentifier("ic_${tipo}", "drawable", packageName)*/
+        val drawableId = resources.getIdentifier(
+            "ic_pokemon_${pokemon.types[0].type!!.name}_type",
+            "drawable",
+            packageName
+        )
+        binding.type1.setBackgroundResource(drawableId)
+        if (pokemon.types.size > 1) {
 
-        //binding.imgPokemon.setBackgroundResource(drawableId)
+                binding.type2.visibility = View.VISIBLE
+            val drawableId = resources.getIdentifier(
+                "ic_pokemon_${pokemon.types[1].type!!.name}_type",
+                "drawable",
+                packageName
+            )
+            binding.type2.setBackgroundResource(drawableId)
+
+        }
+
+
+
+
         Glide.with(applicationContext)
             .load(pokemon.sprites.other.artwork.front_default)
             .into(binding.imgPokemon)

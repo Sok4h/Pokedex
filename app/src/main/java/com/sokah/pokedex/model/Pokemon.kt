@@ -68,5 +68,5 @@ fun getDateParse(pokemon: Pokemon): String {
     val hour = cal.get(Calendar.HOUR_OF_DAY).toString()
     val minutes = cal.get(Calendar.MINUTE).toString()
 
-    return "$day, $monthParse $year - $hour:$minutes"
+    return "$day $monthParse, $year - $hour:$minutes"
 }

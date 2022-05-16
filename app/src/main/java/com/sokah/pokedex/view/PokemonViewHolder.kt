@@ -19,7 +19,7 @@ class PokemonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bindPokemon(pokemon: Pokemon, username: String){
         this.pokemon = pokemon
 
-        binding.tvPokemonId.text = "#${pokemon.id}"
+        binding.tvPokemonId.text = "# ${pokemon.id}"
         binding.tvPokemonName.text = pokemon.name
         Glide.with(itemView).load(pokemon.sprites.other.artwork.front_default).into(binding.imgPokemonPhoto)
 

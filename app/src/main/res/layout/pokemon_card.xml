@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingTop="16dp"
     app:layout_constraintDimensionRatio="1:1">
 
     <androidx.constraintlayout.widget.Guideline
@@ -11,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.4" />
+        app:layout_constraintGuide_percent="0.35" />
 
     <ImageView
         android:id="@+id/img_pokemon_photo"
@@ -31,7 +32,7 @@
         android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/btn_background"
         app:layout_constraintBottom_toBottomOf="parent"

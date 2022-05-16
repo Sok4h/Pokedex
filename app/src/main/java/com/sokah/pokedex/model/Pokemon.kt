@@ -16,12 +16,24 @@ data class Pokemon(
     val stats: List<Stat> = emptyList(),
     val sprites: Sprites = Sprites(Other(Artwork(""))),
     var date: Date? = null,
+    var types :List<PokemonType> =emptyList(),
     var uid: String? = null
 )
 
 data class Sprites(
 
     val other: Other = Other(Artwork(""))
+)
+
+
+data class PokemonType(
+
+    val type :Type?=null
+)
+
+data class Type(
+
+    val name: String=""
 )
 
 data class Other(

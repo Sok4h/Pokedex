@@ -26,7 +26,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class PokemonActivity : AppCompatActivity() {
@@ -46,6 +45,12 @@ class PokemonActivity : AppCompatActivity() {
         val gson = Gson()
         pokemon = gson.fromJson(intent.extras?.getString("pokemon"), Pokemon::class.java)
         pokemon.date = Calendar.getInstance().time
+
+        /*Log.e("TAG", pokemon.types.toString() )
+
+        val drawableId = resources.getIdentifier("ic_${tipo}", "drawable", packageName)*/
+
+        //binding.imgPokemon.setBackgroundResource(drawableId)
         Glide.with(applicationContext)
             .load(pokemon.sprites.other.artwork.front_default)
             .into(binding.imgPokemon)
@@ -75,7 +80,7 @@ class PokemonActivity : AppCompatActivity() {
                 .await()
 
             withContext(Dispatchers.Main) {
-                Toast.makeText(applicationContext, "Se atrapo el pokémon", Toast.LENGTH_SHORT)
+                Toast.makeText(applicationContext, "Se atrapó el pokémon", Toast.LENGTH_SHORT)
                     .show()
 
                 val intent = Intent(applicationContext, MainActivity::class.java)
@@ -99,7 +104,7 @@ class PokemonActivity : AppCompatActivity() {
                 .await()
 
             withContext(Dispatchers.Main) {
-                Toast.makeText(applicationContext, "Se atrapo el pokémon", Toast.LENGTH_SHORT)
+                Toast.makeText(applicationContext, "Pokemon liberado con exito", Toast.LENGTH_SHORT)
                     .show()
 
                 val intent = Intent(applicationContext, MainActivity::class.java)

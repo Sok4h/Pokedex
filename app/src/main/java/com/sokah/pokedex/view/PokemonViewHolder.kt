@@ -16,7 +16,7 @@ class PokemonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val binding = PokemonCardBinding.bind(itemView)
 
     @SuppressLint("SetTextI18n")
-    fun bindPokemon(pokemon: Pokemon){
+    fun bindPokemon(pokemon: Pokemon, username: String){
         this.pokemon = pokemon
 
         binding.tvPokemonId.text = "#${pokemon.id}"
@@ -32,6 +32,7 @@ class PokemonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             intent.putExtra("isMy", true)
             intent.putExtra("uid", pokemon.uid)
             intent.putExtra("pokemon", gson.toJson(pokemon))
+            intent.putExtra("username", username)
 
             itemView.context.startActivity(intent)
         }

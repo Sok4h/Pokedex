@@ -8,19 +8,8 @@ import com.sokah.pokedex.model.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-class PokemonAdapter : RecyclerView.Adapter<PokemonViewHolder>() {
+class PokemonAdapter(private val username: String) : RecyclerView.Adapter<PokemonViewHolder>() {
     private val pokemons = ArrayList<Pokemon>()
-
-    /*
-    init {
-        val sprites = Sprites(Other(Artwork("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/25.png")))
-        val testPokemon = Pokemon("pikachu",23,1,34, stats = ArrayList(), sprites, Calendar.getInstance());
-        pokemons.add(testPokemon)
-        pokemons.add(testPokemon)
-        pokemons.add(testPokemon)
-
-    }
-     */
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -30,7 +19,7 @@ class PokemonAdapter : RecyclerView.Adapter<PokemonViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: PokemonViewHolder, position: Int) {
-        holder.bindPokemon(pokemons[position])
+        holder.bindPokemon(pokemons[position], username)
     }
 
     override fun getItemCount(): Int {

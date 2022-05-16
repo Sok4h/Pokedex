@@ -37,13 +37,15 @@ class PokemonActivity : AppCompatActivity() {
         ActivityPokemonBinding.inflate(layoutInflater)
     }
 
-    lateinit var pokemon: Pokemon
+    private lateinit var pokemon: Pokemon
+    private lateinit var username: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
         val isMy = intent.extras?.getBoolean("isMy")
+        username = intent.extras?.getString("username")!!
 
         val gson = Gson()
         pokemon = gson.fromJson(intent.extras?.getString("pokemon"), Pokemon::class.java)
@@ -94,7 +96,7 @@ class PokemonActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             Firebase.firestore
                 .collection("users")
-                .document("test")
+                .document(username)
                 .collection("pokemons")
                 .add(pokemon)
                 .await()
@@ -103,9 +105,7 @@ class PokemonActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, "Se atrapó el pokémon", Toast.LENGTH_SHORT)
                     .show()
 
-                val intent = Intent(applicationContext, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                applicationContext.startActivity(intent)
+                finish()
             }
 
         }
@@ -117,7 +117,7 @@ class PokemonActivity : AppCompatActivity() {
 
             Firebase.firestore
                 .collection("users")
-                .document("test")
+                .document(username)
                 .collection("pokemons")
                 .document(uid!!)
                 .delete()
@@ -127,9 +127,7 @@ class PokemonActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, "Pokemon liberado con exito", Toast.LENGTH_SHORT)
                     .show()
 
-                val intent = Intent(applicationContext, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                applicationContext.startActivity(intent)
+                finish()
             }
         }
     }

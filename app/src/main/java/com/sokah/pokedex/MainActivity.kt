@@ -24,15 +24,20 @@ class MainActivity : AppCompatActivity() {
     private val api = PokeService()
 
     private var pokemon: Pokemon? = null
-    private var pokemonAdapter = PokemonAdapter()
+    private lateinit var pokemonAdapter : PokemonAdapter
 
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
+    private lateinit var username:String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        username = intent.getStringExtra("username")!!
+        pokemonAdapter = PokemonAdapter(username)
 
         binding.inputPokemon.setEndIconOnClickListener {
             searchPokemon()
@@ -50,16 +55,63 @@ class MainActivity : AppCompatActivity() {
 
         listenPokemons()
 
+        binding.inputQuery.setEndIconOnClickListener{
+            val filterValue = binding.inputQuery.editText?.text.toString()
+            if(filterValue.isEmpty()){
+                listenPokemons()
+            }else{
+                filterPokemons(filterValue)
+            }
+        }
+
+    }
+
+    private fun filterPokemons(filterValue: String){
+        Firebase.firestore
+            .collection("users")
+            .document(username)
+            .collection("pokemons")
+            .orderBy("date")
+            .whereEqualTo("name", filterValue)
+            .addSnapshotListener { snapshot, e ->
+                pokemonAdapter.clear()
+                if (e != null) {
+                    Toast.makeText(
+                        this,
+                        e.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                    Log.e(">>>", e.message.toString())
+                    return@addSnapshotListener
+                }
+
+                if (snapshot !== null && !snapshot.isEmpty) {
+                    snapshot.forEach {
+                        val newPokemon = it.toObject(Pokemon::class.java)
+                        newPokemon.uid = it.id
+
+                        pokemonAdapter.addPokemon(newPokemon)
+                    }
+
+                } else {
+                    Toast.makeText(
+                        this,
+                        "Aun no tienes pokemons, atrapa tu primer pokemon!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
     }
 
     private fun listenPokemons() {
 
         Firebase.firestore
             .collection("users")
-            .document("test")
+            .document(username)
             .collection("pokemons")
             .orderBy("date")
             .addSnapshotListener { snapshot, e ->
+                pokemonAdapter.clear()
                 if (e != null) {
                     Toast.makeText(
                         this,
@@ -70,7 +122,6 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 if (snapshot !== null && !snapshot.isEmpty) {
-                    pokemonAdapter.clear()
                     snapshot.forEach {
                         val newPokemon = it.toObject(Pokemon::class.java)
                         newPokemon.uid = it.id
@@ -112,6 +163,7 @@ class MainActivity : AppCompatActivity() {
                     val gson = Gson()
 
                     intent.putExtra("pokemon", gson.toJson(pokemon))
+                    intent.putExtra("username", username)
                     startActivity(intent)
                 }
 

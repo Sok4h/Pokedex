@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
@@ -32,6 +33,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var username: String
 
+    private lateinit var listener: ListenerRegistration
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -53,14 +56,14 @@ class MainActivity : AppCompatActivity() {
             //layoutManager = LinearLayoutManager(applicationContext)
         }
 
-        listenPokemons()
+        listener = listenPokemons()
 
         binding.inputQuery.editText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (s.toString().isEmpty()) {
-                    listenPokemons()
+                    listener = listenPokemons()
                 }
             }
 
@@ -68,18 +71,19 @@ class MainActivity : AppCompatActivity() {
         })
 
         binding.inputQuery.setEndIconOnClickListener {
+
             val filterValue = binding.inputQuery.editText?.text.toString()
             if (filterValue.isEmpty()) {
-                listenPokemons()
+                listener = listenPokemons()
             } else {
-                filterPokemons(filterValue)
+                listener = filterPokemons(filterValue)
             }
         }
 
     }
 
-    private fun filterPokemons(filterValue: String) {
-        Firebase.firestore
+    private fun filterPokemons(filterValue: String): ListenerRegistration {
+        return Firebase.firestore
             .collection("users")
             .document(username)
             .collection("pokemons")
@@ -115,9 +119,9 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
-    private fun listenPokemons() {
+    private fun listenPokemons(): ListenerRegistration {
 
-        Firebase.firestore
+       return Firebase.firestore
             .collection("users")
             .document(username)
             .collection("pokemons")

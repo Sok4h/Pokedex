@@ -3,6 +3,7 @@ package com.sokah.pokedex
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -22,13 +23,18 @@ class LoginActivity : AppCompatActivity() {
 
         binding.btnLogin.setOnClickListener {
             var newUsername = binding.inputUsername.editText?.text.toString()
-            lifecycleScope.launch(Dispatchers.IO){
-                var userFinder = Firebase.firestore.collection("users").document().get().await()
 
-                if (userFinder.exists()){
-                    login(newUsername)
-                }else{
-                    createUser(newUsername)
+            if (newUsername.isNullOrEmpty()){
+                Toast.makeText(this, "Por favor escribe un username", Toast.LENGTH_SHORT).show()
+            }else{
+                lifecycleScope.launch(Dispatchers.IO){
+                    var userFinder = Firebase.firestore.collection("users").document().get().await()
+
+                    if (userFinder.exists()){
+                        login(newUsername)
+                    }else{
+                        createUser(newUsername)
+                    }
                 }
             }
 
